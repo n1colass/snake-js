@@ -17,19 +17,17 @@ let coin = {
     x:0,
     y:0,
 }
-//ctx.clearRect((coin.x + sizeSnake / 2) - sizeCoin , (coin.y + sizeSnake / 2) - sizeCoin ,sizeCoin*2,sizeCoin*2) ;
-
 document.addEventListener("keydown",moveDirection);
 
-let direction;
-
+let currentDirection = null;
+let queue = [];
 function moveDirection(event){
-    if(event.keyCode == 37 && direction != "right") direction = "left";
-    else if(event.keyCode == 39 && direction != "left") direction = "right";
-    else if(event.keyCode == 38 && direction != "down") direction = "up";
-    else if(event.keyCode == 40 && direction != "up") direction = "down";
-    
+    if(event.keyCode == 37 && currentDirection != "right") queue.unshift("left");
+    else if(event.keyCode == 39 && currentDirection != "left") queue.unshift("right");
+    else if(event.keyCode == 38 && currentDirection != "down") queue.unshift("up");
+    else if(event.keyCode == 40 && currentDirection != "up") queue.unshift("down");
 }
+
 spawnCoin();
 drawSnake();
 
@@ -38,50 +36,50 @@ function drawGame(){
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
     drawCoin();
+    // refresh game
     for(let i = 1; i < snake.length; i++){
         if( snakeX == snake[i].x && snakeY == snake[i].y ){
             document.location.reload();
         }
     }
     // control snake
-    if(direction == "left"){
-       snakeX -= sizeSnake; 
-        /* for(let i = 0; i < snake.length; i++){
-        ctx.clearRect(snake[i].x + sizeSnake,snake[i].y ,sizeSnake,sizeSnake);
-        } */ 
-        for(let i = 0; i < snake.length; i++){
-            ctx.clearRect(snake[i].x,snake[i].y,sizeSnake,sizeSnake);
+    if (queue.length){
+        if(queue[queue.length - 1] == undefined){
+            queue.pop();
         }
-    } 
-    if(direction == "right"){
-        snakeX += sizeSnake;
-         /* for(let i = 0; i < snake.length; i++){
-            ctx.clearRect(snake[i].x - sizeSnake,snake[i].y ,sizeSnake,sizeSnake);
-        } */ 
-        for(let i = 0; i < snake.length; i++){
-            ctx.clearRect(snake[i].x,snake[i].y,sizeSnake,sizeSnake);
-        }
-    } 
-    if(direction == "up"){
-        snakeY -= sizeSnake;
-        /*  for(let i = 0; i < snake.length; i++){
-            ctx.clearRect(snake[i].x,snake[i].y + sizeSnake,sizeSnake,sizeSnake);
-        }  */
-        for(let i = 0; i < snake.length; i++){
-            ctx.clearRect(snake[i].x,snake[i].y,sizeSnake,sizeSnake);
-        }
-    } 
-    if(direction == "down"){
-        snakeY += sizeSnake;
-         /* for(let i = 0; i < snake.length; i++){
-            ctx.clearRect(snake[i].x,snake[i].y - sizeSnake,sizeSnake,sizeSnake);
-        } */
-        for(let i = 0; i < snake.length; i++){
-            ctx.clearRect(snake[i].x,snake[i].y,sizeSnake,sizeSnake);
+        if(queue[queue.length - 1] != currentDirection){
+            currentDirection = queue[queue.length - 1];
         }
     }
-    
-    
+        if(currentDirection == "left"){
+            snakeX -= sizeSnake;
+             for(let i = 0; i < snake.length; i++){
+                 ctx.clearRect(snake[i].x,snake[i].y,sizeSnake,sizeSnake);
+             }
+             queue.pop();
+         } 
+         if(currentDirection == "right"){
+             snakeX += sizeSnake;
+             for(let i = 0; i < snake.length; i++){
+                 ctx.clearRect(snake[i].x,snake[i].y,sizeSnake,sizeSnake);
+             }
+             queue.pop();
+         } 
+         if(currentDirection == "up"){
+             snakeY -= sizeSnake;
+             for(let i = 0; i < snake.length; i++){
+                 ctx.clearRect(snake[i].x,snake[i].y,sizeSnake,sizeSnake);
+             }
+             queue.pop();
+         } 
+         if(currentDirection == "down"){
+             snakeY += sizeSnake;
+             for(let i = 0; i < snake.length; i++){
+                 ctx.clearRect(snake[i].x,snake[i].y,sizeSnake,sizeSnake);
+             }
+             queue.pop();
+         }
+
     // border collision
     if( snakeX == 400 ){
         snakeX = 0;
@@ -107,22 +105,11 @@ function drawGame(){
     }
     snake.unshift(newTail);
     drawSnake();
-
+    console.log(queue);
     
 }
 
 let game = setInterval(drawGame,100);
-
-function refresh(){
-    direction = null;
-    snake = [];
-    snake[0] = {
-        x:(width/2)-sizeSnake/2,
-        y:(height/2)-sizeSnake/2,
-    }
-    spawnCoin();
-    drawSnake();
-}
 
 function score(){
     scoreboard += 3;
