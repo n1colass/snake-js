@@ -18,14 +18,14 @@ let coin = {
     y:0,
 }
 document.addEventListener("keydown",moveDirection);
-
+// control directions
 let currentDirection = null;
 let queue = [];
 function moveDirection(event){
-    if(event.keyCode == 37 && currentDirection != "right") queue.unshift("left");
-    else if(event.keyCode == 39 && currentDirection != "left") queue.unshift("right");
-    else if(event.keyCode == 38 && currentDirection != "down") queue.unshift("up");
-    else if(event.keyCode == 40 && currentDirection != "up") queue.unshift("down");
+    if(event.keyCode == 37 && currentDirection != "right" && currentDirection != "left" ) queue.unshift("left");
+    else if(event.keyCode == 39 && currentDirection != "left" && currentDirection != "right") queue.unshift("right");
+    else if(event.keyCode == 38 && currentDirection != "down" && currentDirection != "up") queue.unshift("up");
+    else if(event.keyCode == 40 && currentDirection != "up" && currentDirection != "down" ) queue.unshift("down");
 }
 
 spawnCoin();
@@ -44,9 +44,6 @@ function drawGame(){
     }
     // control snake
     if (queue.length){
-        if(queue[queue.length - 1] == undefined){
-            queue.pop();
-        }
         if(queue[queue.length - 1] != currentDirection){
             currentDirection = queue[queue.length - 1];
         }
@@ -91,11 +88,10 @@ function drawGame(){
     }else if ( snakeY == 0-sizeSnake ){
         snakeY = 400;
     }
-    
+    // eat coin, spawn new coin, add tail to snake
     if( snakeX == coin.x && snakeY == coin.y){
         spawnCoin();
         score();
-        console.log(snake);
     }else{
         snake.pop();
     }
@@ -105,8 +101,6 @@ function drawGame(){
     }
     snake.unshift(newTail);
     drawSnake();
-    console.log(queue);
-    
 }
 
 let game = setInterval(drawGame,100);
@@ -114,12 +108,6 @@ let game = setInterval(drawGame,100);
 function score(){
     scoreboard += 3;
     document.querySelector('.score-table').innerHTML = `${scoreboard}`;
-}
-
-function increment(n){
-   return function(num){
-       return n + num;
-   }
 }
 
 function drawSnake(){
