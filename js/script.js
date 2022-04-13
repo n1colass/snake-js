@@ -5,7 +5,6 @@ const height = canv.height;
 const width = canv.width;
 const sizeCoin = 4;
 const sizeSnake = 16;
-
 let scoreboard = 0;
 
 let snake = [];
@@ -16,6 +15,10 @@ snake[0] = {
 let coin = {
     x:0,
     y:0,
+}
+function coordCoin(){
+    coin.x = getRandomInt(0, width / sizeSnake ) * sizeSnake;
+    coin.y = getRandomInt(0, height / sizeSnake ) * sizeSnake ;
 }
 document.addEventListener("keydown",moveDirection);
 // control directions
@@ -89,6 +92,18 @@ function drawGame(){
         snakeY = 400;
     }
     // eat coin, spawn new coin, add tail to snake
+    function check(callback){
+        callback();
+    }
+    function repeat(){
+        for(let i = 1; i < snake.length; i++){
+            if(snake[i].x == coin.x && snake[i].y == coin.y){
+                spawnCoin();
+                check(repeat);
+            }
+        }
+    }
+    check(repeat);
     if( snakeX == coin.x && snakeY == coin.y){
         spawnCoin();
         score();
@@ -128,12 +143,6 @@ function drawCoin(){
     ctx.arc(coin.x + sizeSnake / 2,coin.y + sizeSnake / 2 ,sizeCoin,0,10);
     ctx.fill();
     ctx.closePath();
-}
-
-function coordCoin(){
-    coin.x = getRandomInt(0, width / sizeSnake ) * sizeSnake;
-    coin.y = getRandomInt(0, height / sizeSnake ) * sizeSnake ;
-    console.log("coords coin: ",coin.x,coin.y);
 }
 
 function getRandomInt(min,max){
