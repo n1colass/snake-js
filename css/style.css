@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 html{
     height: 100%;
 }
@@ -15,22 +16,25 @@ p{
     margin: 0;
 }
 .score-container{
+    display:flex;
+    justify-content: space-around;
+    gap: 50px;
     max-width: 400px;
     max-height: 50;
     margin-bottom: 10px;
     font-family: 'Press Start 2P', cursive;
     text-transform: uppercase;
-    font-size: 8pt;
+    font-size: 6pt;
     font-variant: small-caps;
     
 }
 .score-title{
     display: flex;
-    max-width: 400px;
-    padding: 1px 5px;
-    border: 10px solid #202123;
+    max-width: max-content;
+    padding: 1px 2px 2px 2px;
+    border: 7px solid #202123;
     background-color: #202123;
-    border-radius: 40px 10px 10px 10px;
+    border-radius: 40px 20px 20px 20px;
 }
 .score-title p {
     margin: 5px 0 0 0;
@@ -38,6 +42,9 @@ p{
     letter-spacing: 0.4em;
     color: white;
     background-color: #202123;
+}
+.highest{
+    border-radius:  20px 40px 20px 20px;
 }
 .canvas{
     background-color: #202123 ;
